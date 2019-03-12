@@ -1,4 +1,4 @@
-# socket.io-example
+# Vue.js UI App
 
 ## Project setup
 ```
