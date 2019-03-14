@@ -1,29 +1,38 @@
 <template>
   <div class="main">
-    <img alt="Vue logo" src="@/assets/logo.png" />
-    <h1>Rock Paper Scissors</h1>
+    <div class="container-fluid">
+      <div>
+        <img alt="Vue logo" src="@/assets/logo.png" />
+        <h1>Rock Paper Scissors</h1>
 
-    <div class="row justify-content-center m-0 mt-3">
-      <button
-        class="tab btn btn-primary mx-2 col-10 col-md-auto"
-        :class="[selectedGame(tab) ? 'btn-primary' : 'btn-secondary']"
-        :key="tab"
-        v-for="tab in tabs"
-        @click="selectedTab = tab"
-      >
-        {{ tab }}
-      </button>
-    </div>
+        <div class="row justify-content-center m-0 mt-3">
+          <button
+            class="tab btn btn-primary mx-2 col-10 col-md-auto"
+            :class="[selectedGame(tab) ? 'btn-primary' : 'btn-secondary']"
+            :key="tab"
+            v-for="tab in tabs"
+            @click="selectedTab = tab"
+          >
+            {{ tab }}
+          </button>
+        </div>
 
-    <SimpleGame v-show="selectedTab === 'Local Player VS Player'" vs="player" />
+        <SimpleGame
+          v-show="selectedTab === 'Local Player VS Player'"
+          vs="player"
+        />
 
-    <SimpleGame
-      v-show="selectedTab === 'Local Player VS Computer'"
-      vs="computer"
-    />
+        <SimpleGame
+          v-show="selectedTab === 'Local Player VS Computer'"
+          vs="computer"
+        />
 
-    <div v-if="selectedTab === 'Remote Player VS Player'">
-      <RemoteGame />
+        <div v-if="selectedTab === 'Remote Player VS Player'">
+          <RemoteGame />
+        </div>
+      </div>
+
+      <History />
     </div>
   </div>
 </template>
@@ -31,12 +40,14 @@
 <script>
 import SimpleGame from "@/components/SimpleGame.vue";
 import RemoteGame from "@/components/RemoteGame.vue";
+import History from "@/components/History.vue";
 
 export default {
   name: "Home",
   components: {
     SimpleGame,
-    RemoteGame
+    RemoteGame,
+    History
   },
   created() {
     let game = this.$route.query.gameId;

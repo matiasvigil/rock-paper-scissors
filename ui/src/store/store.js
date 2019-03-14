@@ -32,7 +32,9 @@ export default new Vuex.Store({
     },
     result: "",
     gameId: "",
-    usersCount: 0
+    gameCount: 0,
+    usersCount: 0,
+    historyItems: []
   },
   mutations: {
     SET_CARD_PLAYER1(state, cardValue) {
@@ -84,16 +86,61 @@ export default new Vuex.Store({
       state.player2.showRock = value;
     },
     RESET_RESULT(state) {
+      state.gameCount += 1;
       state.result = "";
     },
     RESET_GAME_ID(state, value) {
       state.gameId = value;
     },
+    SET_TIE_RESULT(state) {
+      state.result = TIE;
+      state.historyItems.push({
+        id: state.gameCount,
+        player1: {
+          rock: state.player1.showRock,
+          scissors: state.player1.showScissors,
+          paper: state.player1.showPaper
+        },
+        player2: {
+          rock: state.player2.showRock,
+          scissors: state.player2.showScissors,
+          paper: state.player2.showPaper
+        }
+      });
+    },
     WIN_PLAYER1(state) {
       state.player1.score += 1;
+      state.result = WIN_PLAYER1;
+      state.historyItems.push({
+        id: state.gameCount,
+        player1: {
+          rock: state.player1.showRock,
+          scissors: state.player1.showScissors,
+          paper: state.player1.showPaper
+        },
+        player2: {
+          rock: state.player2.showRock,
+          scissors: state.player2.showScissors,
+          paper: state.player2.showPaper
+        }
+      });
     },
     WIN_PLAYER2(state) {
       state.player2.score += 1;
+      state.result = WIN_PLAYER2;
+      state.historyItems.push({
+        id: state.gameCount,
+        player1: {
+          rock: state.player1.showRock,
+          scissors: state.player1.showScissors,
+          paper: state.player1.showPaper
+        },
+        player2: {
+          rock: state.player2.showRock,
+          scissors: state.player2.showScissors,
+          paper: state.player2.showPaper
+        }
+      });
     },
     SET_USER_COUNT(state, value) {
       state.usersCount = value;
@@ -165,12 +212,10 @@ export default new Vuex.Store({
         let result =
           parseInt(state.player1.card) - parseInt(state.player2.card);
         if (result === 0) {
-          state.result = TIE;
+          commit("SET_TIE_RESULT");
         } else if (result === -1 || result === 2) {
-          state.result = WIN_PLAYER2;
           commit("WIN_PLAYER2");
         } else if (result === 1 || result === -2) {
-          state.result = WIN_PLAYER1;
           commit("WIN_PLAYER1");
         }
       }
