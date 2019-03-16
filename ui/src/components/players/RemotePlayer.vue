@@ -49,9 +49,9 @@ export default {
       return !this.waitingOpponent && this.player1.card === "";
     },
     ...mapState({
-      usersCount: state => state.usersCount,
-      player1: state => state.player1,
-      gameId: state => state.gameId
+      usersCount: state => state.game.usersCount,
+      player1: state => state.players.player1,
+      gameId: state => state.game.gameId
     })
   },
   data() {

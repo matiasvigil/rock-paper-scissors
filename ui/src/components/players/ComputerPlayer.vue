@@ -12,15 +12,13 @@
       <div v-show="player.showScissors" class="col-2 p-0 mx-3">
         <img class="w-50" src="@/assets/scissors.svg" />
       </div>
-      <div v-show="player.card === ''" class="col-6 p-0 mx-3">
-        <button @click="play" class="btn btn-warning">Play</button>
-      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import { EventBus } from "@/eventsBus.js";
 
 export default {
   name: "ComputerPlayer",
@@ -28,14 +26,21 @@ export default {
     player: Object,
     title: String
   },
+  created() {
+    EventBus.$on("play", this.play);
+  },
+  beforeDestroy() {
+    EventBus.$off("play");
+  },
   computed: {
     ...mapState({
-      player1: state => state.player1,
-      player2: state => state.player2
+      player1: state => state.players.player1,
+      player2: state => state.players.player2
     })
   },
   methods: {
     play: function() {
+      console.log("play-computer");
       var random = Math.random();
       var card = Math.floor(random * 3);
       this.$store.dispatch("playCard", {

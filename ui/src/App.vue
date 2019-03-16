@@ -2,6 +2,7 @@
   <div id="app">
     <div id="nav">
       <router-link :to="{ name: 'home' }">Home</router-link>|
+      <router-link :to="{ name: 'history' }">History</router-link>|
       <router-link :to="{ name: 'about' }">About</router-link>
     </div>
     <router-view />
@@ -27,5 +28,9 @@
 
 #nav a.router-link-exact-active {
   color: #42b983;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 </style>

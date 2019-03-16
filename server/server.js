@@ -34,13 +34,14 @@ io.sockets.on("connection", function(socket) {
     var usersCount = decreaseUsersCount(gameId);
     console.log("leaving game", gameId);
     socket.leave(gameId);
-    io.in(gameId).emit("unsubscribe", usersCount);
+    io.in(gameId).emit("unsubscribed", usersCount);
   });
 
   socket.on("play", function(data) {
     console.log("sending move");
     socket.to(data.gameId).emit("play", data);
   });
+
   socket.on("reset", function(gameId) {
     console.log("reset");
     socket.to(gameId).emit("reset", gameId);

@@ -53,7 +53,7 @@ export default {
   name: "History",
   computed: {
     ...mapState({
-      items: state => state.historyItems
+      items: state => state.history.items
     })
   }
 };

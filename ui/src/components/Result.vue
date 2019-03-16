@@ -22,7 +22,7 @@ export default {
   },
   computed: {
     ...mapState({
-      result: state => state.result
+      result: state => state.game.result
     })
   }
 };

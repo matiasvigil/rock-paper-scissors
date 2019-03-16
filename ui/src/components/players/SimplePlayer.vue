@@ -6,21 +6,24 @@
       <div
         @click="play(ROCK)"
         v-show="player.showRock"
-        class="col-2 cursor-pointer p-0 mx-3"
+        :class="[player.enabled ? 'cursor-pointer' : '', '']"
+        class="col-2 p-0 mx-3"
       >
         <img class="w-50" src="@/assets/rock.svg" />
       </div>
       <div
         @click="play(PAPER)"
         v-show="player.showPaper"
-        class="col-2 cursor-pointer p-0 mx-3"
+        :class="[player.enabled ? 'cursor-pointer' : '', '']"
+        class="col-2 p-0 mx-3"
       >
         <img class="w-50" src="@/assets/paper.svg" />
       </div>
       <div
         @click="play(SCISSORS)"
         v-show="player.showScissors"
-        class="col-2 cursor-pointer p-0 mx-3"
+        :class="[player.enabled ? 'cursor-pointer' : '', '']"
+        class="col-2 p-0 mx-3"
       >
         <img class="w-50" src="@/assets/scissors.svg" />
       </div>
@@ -30,6 +33,7 @@
 
 <script>
 import { SCISSORS, PAPER, ROCK } from "@/constants.js";
+import { EventBus } from "@/eventsBus.js";
 import { mapState } from "vuex";
 
 export default {
@@ -41,7 +45,7 @@ export default {
   },
   computed: {
     ...mapState({
-      gameId: state => state.gameId
+      gameId: state => state.game.gameId
     })
   },
   data() {
@@ -53,9 +57,14 @@ export default {
   },
   methods: {
     play: function(card) {
-      this.$store.dispatch("playCard", { card: card, id: this.player.id });
-      if (this.remote) {
-        this.$socket.emit("play", { gameId: this.gameId, card: card });
+      if (this.player.enabled) {
+        this.$store.dispatch("playCard", { card: card, id: this.player.id });
+        if (this.remote) {
+          this.$socket.emit("play", { gameId: this.gameId, card: card });
+        } else {
+          console.log("emit-play");
+          EventBus.$emit("play");
+        }
       }
     }
   }

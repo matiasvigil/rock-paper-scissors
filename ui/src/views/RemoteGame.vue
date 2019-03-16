@@ -35,8 +35,7 @@ export default {
     this.$socket.emit("unsubscribe", this.gameId);
   },
   created() {
-    console.log("Created");
-    let game = this.$route.query.gameId;
+    let game = this.$route.params.id;
     if (typeof game !== "undefined") {
       this.$store.dispatch("resetGameId", game);
     } else {
@@ -45,16 +44,16 @@ export default {
     window.addEventListener("beforeunload", this.unsubscribe);
   },
   mounted() {
-    console.log("mounted");
     this.$socket.emit("subscribe", this.gameId);
     this.$store.dispatch("resetPlayer2", false);
+    this.$store.dispatch("disablePlayer1");
   },
   computed: {
     ...mapState({
-      player1: state => state.player1,
-      player2: state => state.player2,
-      usersCount: state => state.usersCount,
-      gameId: state => state.gameId
+      player1: state => state.players.player1,
+      player2: state => state.players.player2,
+      usersCount: state => state.game.usersCount,
+      gameId: state => state.game.gameId
     })
   },
 
@@ -89,7 +88,6 @@ export default {
       console.log("socket connected");
     },
     gameIsFull: function(data) {
-      console.log("Game is full");
       if (this.usersCount === 0 && data.gameId === this.gameId) {
         this.fullGame = true;
         this.$store.dispatch("resetGameId", "");
@@ -99,22 +97,29 @@ export default {
       console.log("Player disconnected...");
     },
     subscribe: function(usersCount) {
-      console.log("subscribe");
       this.$store.dispatch("setUserCount", usersCount.toString());
     },
     subscribed: function(usersCount) {
       this.fullGame = false;
       this.$store.dispatch("setUserCount", usersCount.toString());
-      console.log("pushing query " + this.gameId);
-      this.$router.push({ name: "home", query: { gameId: this.gameId } });
+      this.$router.push({ name: "remoteGame", params: { id: this.gameId } });
+      if (usersCount === 2) {
+        this.$store.dispatch("enablePlayer1");
+      }
     },
     unsubscribe: function(usersCount) {
       this.$store.dispatch("setUserCount", usersCount.toString());
       this.$store.dispatch("resetPlayer2", false);
+      this.$store.dispatch("disablePlayer1");
+      console.log("Opponent disconnected...");
+    },
+    unsubscribed: function(usersCount) {
+      this.$store.dispatch("setUserCount", usersCount.toString());
+      this.$store.dispatch("resetPlayer2", false);
+      this.$store.dispatch("disablePlayer1");
       console.log("Opponent disconnected...");
     },
     reset: function() {
-      console.log("reset");
       this.$store.dispatch("resetPlayer1", true);
       this.$store.dispatch("resetPlayer2", false);
       this.$store.dispatch("resetResult");
@@ -122,9 +127,3 @@ export default {
   }
 };
 </script>
-
-<style>
-.cursor-pointer {
-  cursor: pointer;
-}
-</style>

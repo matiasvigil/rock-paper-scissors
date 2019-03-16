@@ -4,13 +4,13 @@
       <SimplePlayer :player="player1" title="Your score" />
       <Result v-if="vs === 'player'" />
       <SimplePlayer
-        v-show="vs === 'player'"
+        v-if="vs === 'player'"
         :player="player2"
         title="Opponent's score"
       />
       <Result v-if="vs === 'computer'" />
       <ComputerPlayer
-        v-show="vs === 'computer'"
+        v-if="vs === 'computer'"
         :player="player2"
         title="Opponent's score"
       />
@@ -36,8 +36,8 @@ export default {
   },
   computed: {
     ...mapState({
-      player1: state => state.player1,
-      player2: state => state.player2
+      player1: state => state.players.player1,
+      player2: state => state.players.player2
     })
   },
   methods: {
